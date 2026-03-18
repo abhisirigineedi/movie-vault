@@ -53,3 +53,9 @@ repo-root/
 | Frontend | HTMX + Jinja2 |
 | Styling  | Vanilla CSS   |
 | Server   | Uvicorn       |
+
+## 🚀 Live Demo
+
+🔗 https://movie-vault-zw9w.onrender.com/
+
+> Try adding a movie and see it update instantly ⚡
