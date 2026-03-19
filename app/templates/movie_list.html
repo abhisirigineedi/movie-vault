@@ -1,0 +1,12 @@
+{% for movie in movies %}
+<li class="movie-card">
+    <div class="movie-info">
+        <span class="movie-title-text">
+            <span class="movie-number">{{ loop.index }}.</span> 🎬 {{ movie.title }}
+        </span>
+        <span class="movie-meta">📌 Genre: {{ movie.genre if movie.genre else 'Not specified' }}</span>
+        <span class="movie-meta">⭐ Rating: {{ movie.rating if movie.rating else 'Not specified' }}{{ '/5' if movie.rating else '' }}</span>
+    </div>
+    <button class="delete-btn" hx-delete="/delete-movie/{{ movie.id }}" hx-target="closest li" hx-swap="outerHTML" aria-label="Delete movie">✕</button>
+</li>
+{% endfor %}
