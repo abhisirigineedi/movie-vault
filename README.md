@@ -111,7 +111,12 @@ This function-based pattern ensures new features never break existing ones.
 
 🔗 https://movie-vault-zw9w.onrender.com/
 
-✨ Try adding a movie and see it update instantly!
+🎬 Features:
+➕ Add movies dynamically
+❌ Delete movies instantly
+🔄 Real-time updates
+⚡ Fast API-based backend
 
+💡 Try adding and deleting a movie to see instant changes!
 ⚠️ Note: The app may take 30–60 seconds to load initially (free hosting cold start).
 
