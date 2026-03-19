@@ -106,3 +106,12 @@ This function-based pattern ensures new features never break existing ones.
 | Styling    | Vanilla CSS          |
 | Server     | Uvicorn              |
 | Deployment | Render               |
+
+## 🚀 Live Demo (v1.0)
+
+🔗 https://movie-vault-zw9w.onrender.com/
+
+✨ Try adding a movie and see it update instantly!
+
+⚠️ Note: The app may take 30–60 seconds to load initially (free hosting cold start).
+
