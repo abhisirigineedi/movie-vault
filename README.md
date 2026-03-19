@@ -112,9 +112,13 @@ This function-based pattern ensures new features never break existing ones.
 🔗 https://movie-vault-zw9w.onrender.com/
 
 🎬 Features:
+
 ➕ Add movies dynamically
+
 ❌ Delete movies instantly
+
 🔄 Real-time updates
+
 ⚡ Fast API-based backend
 
 💡 Try adding and deleting a movie to see instant changes!
