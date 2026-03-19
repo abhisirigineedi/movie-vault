@@ -118,5 +118,6 @@ This function-based pattern ensures new features never break existing ones.
 ⚡ Fast API-based backend
 
 💡 Try adding and deleting a movie to see instant changes!
+
 ⚠️ Note: The app may take 30–60 seconds to load initially (free hosting cold start).
 
