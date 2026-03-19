@@ -30,33 +30,24 @@ async def add_movie(
     request: Request,
     db: Session = Depends(get_db),
     title: str = Form(...),
+    genre: str | None = Form(None),
+    rating: float | None = Form(None),
 ):
     """Add a movie and return the updated movie list partial (HTMX)."""
     if title.strip():
         try:
-            movie_service.add_movie(db, title)
+            movie_service.add_movie(db, title=title, genre=genre, rating=rating)
         except ValueError:
             pass  # silently ignore empty-title edge case
     movies = movie_service.get_all_movies(db)
-    # Return only the movie-list partial so HTMX can swap it in-place
-    movie_items = "".join(
-        f'<li><span class="movie-number">{i}.</span> <span class="movie-title">{m.title}</span> '
-        f'<button class="delete-btn" hx-delete="/delete-movie/{m.id}" hx-target="closest li" hx-swap="outerHTML" aria-label="Delete movie">✕</button></li>'
-        for i, m in enumerate(movies, 1)
-    )
-    return HTMLResponse(content=movie_items)
+    return templates.TemplateResponse("movie_list.html", {"request": request, "movies": movies})
 
 
 @router.get("/movies", response_class=HTMLResponse)
-async def get_movies(db: Session = Depends(get_db)):
+async def get_movies(request: Request, db: Session = Depends(get_db)):
     """Return the current movie list as an HTML partial."""
     movies = movie_service.get_all_movies(db)
-    movie_items = "".join(
-        f'<li><span class="movie-number">{i}.</span> <span class="movie-title">{m.title}</span> '
-        f'<button class="delete-btn" hx-delete="/delete-movie/{m.id}" hx-target="closest li" hx-swap="outerHTML" aria-label="Delete movie">✕</button></li>'
-        for i, m in enumerate(movies, 1)
-    )
-    return HTMLResponse(content=movie_items)
+    return templates.TemplateResponse("movie_list.html", {"request": request, "movies": movies})
 
 @router.delete("/delete-movie/{movie_id}", response_class=HTMLResponse)
 async def delete_movie_ui(movie_id: int, db: Session = Depends(get_db)):

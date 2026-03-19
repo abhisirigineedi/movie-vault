@@ -10,6 +10,13 @@ A FastAPI web app to keep track of movies you want to watch — now backed by a 
 - **Deployment-ready** — `render.yaml` blueprint for one-click Render deployment
 - **Error handling** — input validation, not-found checks, data integrity
 
+## ✨ Feature Update: Genre & Rating
+
+- Added display of movie genre
+- Added user rating (1–5)
+- Updated frontend to render new fields dynamically
+- Improved UI clarity
+
 ## Quick Start (Local)
 
 ```bash
