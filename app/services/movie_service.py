@@ -30,14 +30,22 @@ def add_movie(
     title: str,
     genre: Optional[str] = None,
     rating: Optional[float] = None,
+    user=None,
 ) -> DBMovie:
     """Insert a new movie and return the persisted row."""
+    from app.models.rating import Rating
     title = title.strip()
     if not title:
         raise ValueError("Movie title cannot be empty.")
 
     movie = DBMovie(title=title, genre=genre, rating=rating)
     db.add(movie)
+    db.flush() # flush to get movie.id
+    
+    if user and rating:
+        new_rating = Rating(user_id=user.id, movie_id=movie.id, rating=rating)
+        db.add(new_rating)
+        
     db.commit()
     db.refresh(movie)
     return movie

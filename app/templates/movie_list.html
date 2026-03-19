@@ -1,12 +1,31 @@
 {% for movie in movies %}
-<li class="movie-card">
+{% set is_rated_by_user = user and user.ratings | selectattr("movie_id", "equalto", movie.id) | list %}
+<li class="movie-card{% if is_rated_by_user %} rated-by-user{% endif %}">
     <div class="movie-info">
         <span class="movie-title-text">
             <span class="movie-number">{{ loop.index }}.</span> 🎬 {{ movie.title }}
         </span>
-        <span class="movie-meta">📌 Genre: {{ movie.genre if movie.genre else 'Not specified' }}</span>
-        <span class="movie-meta">⭐ Rating: {{ movie.rating if movie.rating else 'Not specified' }}{{ '/5' if movie.rating else '' }}</span>
+        <span class="movie-meta">
+            📌 Genre: 
+            {% if movie.genre %}
+            <span class="genre-tag">{{ movie.genre }}</span>
+            {% else %}
+            Not specified
+            {% endif %}
+        </span>
+        <span class="movie-meta">
+            ⭐ Rating: 
+            {% if movie.rating %}
+                {% set full_stars = movie.rating | int %}
+                {% for i in range(full_stars) %}⭐{% endfor %}
+                ({{ movie.rating }})
+            {% else %}
+                Not specified
+            {% endif %}
+        </span>
     </div>
+    {% if user %}
     <button class="delete-btn" hx-delete="/delete-movie/{{ movie.id }}" hx-target="closest li" hx-swap="outerHTML" aria-label="Delete movie">✕</button>
+    {% endif %}
 </li>
 {% endfor %}

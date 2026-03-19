@@ -113,3 +113,4 @@ This function-based pattern ensures new features never break existing ones.
 | Styling    | Vanilla CSS          |
 | Server     | Uvicorn              |
 | Deployment | Render               |
+

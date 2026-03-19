@@ -62,11 +62,25 @@
     <div class="container">
         <!-- Header -->
         <header>
-            <h1>🎬 Movie Wishlist</h1>
-            <p class="subtitle">Keep track of the movies you want to watch</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>🎬 Movie Wishlist</h1>
+                    <p class="subtitle">Keep track of the movies you want to watch</p>
+                </div>
+                <div>
+                    {% if user %}
+                    <span>Welcome, {{ user.username }}!</span>
+                    <a href="/logout" class="btn btn-secondary">Logout</a>
+                    {% else %}
+                    <a href="/login" class="btn btn-primary">Login</a>
+                    <a href="/signup" class="btn btn-secondary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
         </header>
 
         <!-- Add-movie form (HTMX powered) -->
+        {% if user %}
         <form
             id="add-movie-form"
             hx-post="/add-movie"
@@ -104,10 +118,24 @@
                 </button>
             </div>
         </form>
+        {% else %}
+        <p style="text-align: center; margin: 20px 0;"><a href="/login" class="btn btn-primary">Login to add and rate movies</a></p>
+        {% endif %}
 
         <!-- Movie list section -->
         <section class="movie-list-section">
-            <h2>Your Movies</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="margin: 0;">Your Movies</h2>
+                <div>
+                    <label style="font-size: 0.9rem;">Sort/Filter: </label>
+                    <select id="sort-select" onchange="filterMovies()" style="padding: 5px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: none;">
+                        <option value="all">All Movies</option>
+                        <option value="genre">Sort by Genre</option>
+                        <option value="rating">Sort by Rating (High-Low)</option>
+                        <option value="my_ratings">My Ratings</option>
+                    </select>
+                </div>
+            </div>
             <ul id="movie-list">
                 {% include 'movie_list.html' %}
             </ul>
@@ -129,6 +157,36 @@
                 empty.style.display = "none";
             }
         });
+
+        function filterMovies() {
+            const select = document.getElementById('sort-select');
+            const list = document.getElementById('movie-list');
+            const items = Array.from(list.children);
+            
+            items.forEach(item => item.style.display = 'flex');
+
+            if (select.value === 'my_ratings') {
+                items.forEach(item => {
+                    if (!item.classList.contains('rated-by-user')) {
+                        item.style.display = 'none';
+                    }
+                });
+            } else if (select.value === 'rating') {
+                items.sort((a, b) => {
+                    const ratingA = a.innerText.match(/\((\d+(\.\d)?)\)/) ? parseFloat(a.innerText.match(/\((\d+(\.\d)?)\)/)[1]) : 0;
+                    const ratingB = b.innerText.match(/\((\d+(\.\d)?)\)/) ? parseFloat(b.innerText.match(/\((\d+(\.\d)?)\)/)[1]) : 0;
+                    return ratingB - ratingA;
+                });
+                items.forEach(item => list.appendChild(item));
+            } else if (select.value === 'genre') {
+                items.sort((a, b) => {
+                    const genreA = a.querySelector('.genre-tag') ? a.querySelector('.genre-tag').innerText : '';
+                    const genreB = b.querySelector('.genre-tag') ? b.querySelector('.genre-tag').innerText : '';
+                    return genreA.localeCompare(genreB);
+                });
+                items.forEach(item => list.appendChild(item));
+            }
+        }
     </script>
 </body>
 </html>

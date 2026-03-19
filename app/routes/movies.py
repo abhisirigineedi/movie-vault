@@ -18,10 +18,11 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/", response_class=HTMLResponse)
 async def index(request: Request, db: Session = Depends(get_db)):
-    """Render the main page with the current movie list."""
+    from app.auth import get_optional_current_user
+    user = await get_optional_current_user(request, db)
     movies = movie_service.get_all_movies(db)
     return templates.TemplateResponse(
-        "index.html", {"request": request, "movies": movies}
+        "index.html", {"request": request, "movies": movies, "user": user}
     )
 
 
@@ -34,13 +35,19 @@ async def add_movie(
     rating: float | None = Form(None),
 ):
     """Add a movie and return the updated movie list partial (HTMX)."""
+    from app.auth import get_current_user, get_optional_current_user
+    # Optional logic: could restrict to logged in users, or just handle optional
+    user = await get_optional_current_user(request, db)
+    if not user:
+        return HTMLResponse(content="<p>Please login to add a movie</p>", status_code=401)
+        
     if title.strip():
         try:
-            movie_service.add_movie(db, title=title, genre=genre, rating=rating)
+            movie_service.add_movie(db, title=title, genre=genre, rating=rating, user=user)
         except ValueError:
             pass  # silently ignore empty-title edge case
     movies = movie_service.get_all_movies(db)
-    return templates.TemplateResponse("movie_list.html", {"request": request, "movies": movies})
+    return templates.TemplateResponse("movie_list.html", {"request": request, "movies": movies, "user": user})
 
 
 @router.get("/movies", response_class=HTMLResponse)
