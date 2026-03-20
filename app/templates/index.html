@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,12 +13,18 @@
     <!-- HTMX CDN -->
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
+<<<<<<< HEAD
     <!-- Custom styles (cache-busted) -->
     <link rel="stylesheet" href="/static/styles.css?v=3" />
+=======
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/static/styles.css" />
+>>>>>>> origin/main
 
     <!-- Google Font — Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<<<<<<< HEAD
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <style>
@@ -58,6 +67,13 @@
     </style>
 </head>
 
+=======
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+</head>
+>>>>>>> origin/main
 <body>
     <!-- Animated floating background blobs -->
     <div class="blob blob-1"></div>
@@ -65,6 +81,7 @@
     <div class="blob blob-3"></div>
 
     <div class="container">
+<<<<<<< HEAD
         <header style="display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <h1>🎬 Movie Wishlist</h1>
@@ -108,6 +125,47 @@
             <h2>Your Movies</h2>
             <ul id="movie-list">
                 {% include 'movie_list.html' %}
+=======
+        <!-- Header -->
+        <header>
+            <h1>🎬 Movie Wishlist</h1>
+            <p class="subtitle">Keep track of the movies you want to watch</p>
+        </header>
+
+        <!-- Add-movie form (HTMX powered) -->
+        <form
+            id="add-movie-form"
+            hx-post="/add-movie"
+            hx-target="#movie-list"
+            hx-swap="innerHTML"
+            hx-on::after-request="this.reset()"
+        >
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="movie-title"
+                    name="title"
+                    placeholder="Enter a movie name…"
+                    required
+                    autocomplete="off"
+                />
+                <button type="submit" id="add-movie-btn">
+                    <span class="btn-icon">＋</span> Add Movie
+                </button>
+            </div>
+        </form>
+
+        <!-- Movie list section -->
+        <section class="movie-list-section">
+            <h2>Your Movies</h2>
+            <ul id="movie-list">
+                {% for movie in movies %}
+                <li>
+                    <span class="movie-number">{{ loop.index }}.</span>
+                    {{ movie.title }}
+                </li>
+                {% endfor %}
+>>>>>>> origin/main
             </ul>
 
             {% if not movies %}
@@ -116,7 +174,10 @@
             </p>
             {% endif %}
         </section>
+<<<<<<< HEAD
         {% endif %}
+=======
+>>>>>>> origin/main
     </div>
 
     <!-- Hide the empty-state text once a movie is added -->
@@ -130,5 +191,9 @@
         });
     </script>
 </body>
+<<<<<<< HEAD
 
 </html>
+=======
+</html>
+>>>>>>> origin/main

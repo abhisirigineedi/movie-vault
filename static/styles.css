@@ -89,7 +89,10 @@ body {
     0% {
         transform: translate(0, 0) scale(1);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
     100% {
         transform: translate(40px, -30px) scale(1.12);
     }
@@ -136,8 +139,12 @@ form {
     gap: 10px;
 }
 
+<<<<<<< HEAD
 input[type="text"],
 input[type="number"] {
+=======
+input[type="text"] {
+>>>>>>> origin/main
     flex: 1;
     padding: 14px 18px;
     font-size: 0.95rem;
@@ -150,6 +157,7 @@ input[type="number"] {
     transition: border var(--transition), box-shadow var(--transition);
 }
 
+<<<<<<< HEAD
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
     color: var(--text-secondary);
@@ -157,6 +165,13 @@ input[type="number"]::placeholder {
 
 input[type="text"]:focus,
 input[type="number"]:focus {
+=======
+input[type="text"]::placeholder {
+    color: var(--text-secondary);
+}
+
+input[type="text"]:focus {
+>>>>>>> origin/main
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
@@ -231,6 +246,7 @@ button[type="submit"]:active {
     animation: slideIn 0.3s ease-out both;
 }
 
+<<<<<<< HEAD
 .movie-title {
     flex: 1;
     text-align: left;
@@ -255,6 +271,8 @@ button[type="submit"]:active {
     background: rgba(255, 77, 77, 0.1);
 }
 
+=======
+>>>>>>> origin/main
 #movie-list li:hover {
     background: var(--bg-card-hover);
     transform: translateX(4px);
@@ -271,7 +289,10 @@ button[type="submit"]:active {
         opacity: 0;
         transform: translateY(8px);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
     to {
         opacity: 1;
         transform: translateY(0);
@@ -296,6 +317,7 @@ button[type="submit"]:active {
         font-size: 1.8rem;
     }
 }
+<<<<<<< HEAD
 
 .star-rating {
     display: inline-block;
@@ -308,3 +330,5 @@ button[type="submit"]:active {
     -webkit-text-fill-color: transparent;
     letter-spacing: 2px;
 }
+=======
+>>>>>>> origin/main

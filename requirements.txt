@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 fastapi==0.115.0
 uvicorn==0.42.0
 gunicorn==23.0.0
@@ -8,3 +9,10 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-dotenv==1.0.1
 psycopg2-binary==2.9.10
+=======
+fastapi
+uvicorn
+jinja2
+python-multipart
+pydantic
+>>>>>>> origin/main

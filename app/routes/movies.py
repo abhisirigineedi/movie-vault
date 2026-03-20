@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """API routes for the movie wishlist — v1.0 (database-backed)."""
 
 from fastapi import APIRouter, Body, Depends, Form, HTTPException, Request
@@ -6,12 +7,21 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+=======
+"""API routes for the movie wishlist."""
+
+from fastapi import APIRouter, Form, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
+>>>>>>> origin/main
 from app.services import movie_service
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
+<<<<<<< HEAD
 # ---------------------------------------------------------------------------
 # Existing endpoints (same URLs — frontend stays unchanged)
 # ---------------------------------------------------------------------------
@@ -26,10 +36,19 @@ async def index(request: Request, db: Session = Depends(get_db)):
     movies = movie_service.get_all_movies(db, user_id=user.id) if user else []
     return templates.TemplateResponse(
         "index.html", {"request": request, "movies": movies, "user": user}
+=======
+@router.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    """Render the main page with the current movie list."""
+    movies = movie_service.get_movies()
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "movies": movies}
+>>>>>>> origin/main
     )
 
 
 @router.post("/add-movie", response_class=HTMLResponse)
+<<<<<<< HEAD
 async def add_movie(
     request: Request,
     db: Session = Depends(get_db),
@@ -167,3 +186,27 @@ async def api_delete_movie(request: Request, movie_id: int, db: Session = Depend
     except PermissionError as e:
         raise HTTPException(status_code=403, detail=str(e))
     return {"detail": "Movie deleted"}
+=======
+async def add_movie(request: Request, title: str = Form(...)):
+    """Add a movie and return the updated movie list partial (HTMX)."""
+    if title.strip():
+        movie_service.add_movie(title)
+    movies = movie_service.get_movies()
+    # Return only the movie-list partial so HTMX can swap it in-place
+    movie_items = "".join(
+        f'<li><span class="movie-number">{i}.</span> {m.title}</li>'
+        for i, m in enumerate(movies, 1)
+    )
+    return HTMLResponse(content=movie_items)
+
+
+@router.get("/movies", response_class=HTMLResponse)
+async def get_movies():
+    """Return the current movie list as an HTML partial."""
+    movies = movie_service.get_movies()
+    movie_items = "".join(
+        f'<li><span class="movie-number">{i}.</span> {m.title}</li>'
+        for i, m in enumerate(movies, 1)
+    )
+    return HTMLResponse(content=movie_items)
+>>>>>>> origin/main

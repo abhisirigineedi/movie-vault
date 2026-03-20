@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """Pydantic schemas for movie data validation and serialisation."""
 
 from datetime import datetime
@@ -39,3 +40,12 @@ class MovieResponse(BaseModel):
 
     class Config:
         from_attributes = True
+=======
+from pydantic import BaseModel
+
+
+class Movie(BaseModel):
+    """Pydantic model representing a movie in the wishlist."""
+
+    title: str
+>>>>>>> origin/main
