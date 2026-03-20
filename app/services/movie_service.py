@@ -11,9 +11,12 @@ from app.models.db_movie import DBMovie
 # READ
 # ---------------------------------------------------------------------------
 
-def get_all_movies(db: Session) -> list[DBMovie]:
-    """Return every movie, ordered by creation time (newest last)."""
-    return db.query(DBMovie).order_by(DBMovie.id.asc()).all()
+def get_all_movies(db: Session, user_id: Optional[int] = None) -> list[DBMovie]:
+    """Return movies for a given user, or all if no user specified."""
+    query = db.query(DBMovie)
+    if user_id is not None:
+        query = query.filter(DBMovie.user_id == user_id)
+    return query.order_by(DBMovie.id.asc()).all()
 
 
 def get_movie_by_id(db: Session, movie_id: int) -> Optional[DBMovie]:
@@ -30,18 +33,17 @@ def add_movie(
     title: str,
     genre: Optional[str] = None,
     rating: Optional[float] = None,
-    user=None,
+    user = None,
 ) -> DBMovie:
     """Insert a new movie and return the persisted row."""
-    from app.models.rating import Rating
+    from app.models.user import Rating
     title = title.strip()
     if not title:
         raise ValueError("Movie title cannot be empty.")
 
-    movie = DBMovie(title=title, genre=genre, rating=rating)
+    movie = DBMovie(title=title, genre=genre, rating=rating, user_id=user.id if user else None)
     db.add(movie)
-    db.flush() # flush to get movie.id
-    
+    db.flush()
     if user and rating:
         new_rating = Rating(user_id=user.id, movie_id=movie.id, rating=rating)
         db.add(new_rating)
@@ -86,11 +88,18 @@ def update_movie(
 # DELETE
 # ---------------------------------------------------------------------------
 
-def delete_movie(db: Session, movie_id: int) -> bool:
-    """Delete a movie by id. Returns True on success, raises on not found."""
+def delete_movie(db: Session, movie_id: int, user_id: Optional[int] = None) -> bool:
+    """Delete a movie by id, optionally verifying ownership. Returns True on success."""
     movie = get_movie_by_id(db, movie_id)
     if movie is None:
         raise ValueError(f"Movie with id {movie_id} not found.")
+
+    if user_id is not None and movie.user_id != user_id:
+        raise PermissionError("You do not have permission to delete this movie.")
+
+    from app.models.user import Rating, Favorite
+    db.query(Rating).filter(Rating.movie_id == movie_id).delete()
+    db.query(Favorite).filter(Favorite.movie_id == movie_id).delete()
 
     db.delete(movie)
     db.commit()

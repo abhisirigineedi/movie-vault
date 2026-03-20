@@ -1,48 +1,73 @@
-# 🎬 Movie Wishlist — v1.0 (SQL + Deployment Ready)
+# 🎬 Movie Vault — v1.3
 
-A FastAPI web app to keep track of movies you want to watch — now backed by a real SQL database with full CRUD support and ready for deployment on Render.
+Movie Vault is a sleek, modern web application for managing your personal movie wishlist. Built with **FastAPI**, **HTMX**, and **SQLAlchemy**, it offers a fast, interactive experience with persistent database storage.
 
-## What's New in v1.0
+## 🚀 Key Features — v1.3 (Security & Stability)
 
-- **SQL database** — movies persist across restarts (SQLite locally, PostgreSQL on Render)
-- **Full CRUD** — add, view, update, and delete movies via API
-- **Expanded data model** — `genre` and `rating` fields (optional, for future UI)
-- **Deployment-ready** — `render.yaml` blueprint for one-click Render deployment
-- **Error handling** — input validation, not-found checks, data integrity
+- **Total Data Privacy**: User wishlists are 100% isolated. No more data leakage between accounts.
+- **Strict Data Integrity**: Implemented `AUTOINCREMENT` and `ON DELETE CASCADE` to ensure that when a user is deleted, all their associated movies, ratings, and favorites are also purged.
+- **Automatic Auditing**: Every user and movie record now includes a `created_at` timestamp for better data management.
+- **Sleek UI/UX**: HTMX-powered interactions for a "single-page" feel without the complexity of a heavy frontend framework.
+- **Deployment Ready**: Fully configured for both SQLite (local) and PostgreSQL (production/Render).
 
-## ✨ Feature Update: Genre & Rating
+## 🛠️ Tech Stack
+- **Backend**: FastAPI (Python 3.9+)
+- **ORM**: SQLAlchemy 2.0+
+- **Database**: SQLite (default), PostgreSQL (supported)
+- **Frontend**: HTMX, Jinja2, Vanilla CSS
+- **Auth**: JWT (JSON Web Tokens) with Secure Cookies
 
-- Added display of movie genre
-- Added user rating (1–5)
-- Updated frontend to render new fields dynamically
-- Improved UI clarity
+## 📦 Installation & Setup
 
-## Quick Start (Local)
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/your-username/movie-vault.git
+    cd movie-vault
+    ```
 
-```bash
-# 1. Create & activate virtual environment
-python -m venv .venv
-.venv\Scripts\activate        # Windows
-# source .venv/bin/activate   # macOS / Linux
+2.  **Set up a virtual environment**:
+    ```bash
+    python -m venv .venv
+    .venv\Scripts\activate  # Windows
+    source .venv/bin/activate  # macOS/Linux
+    ```
 
-# 2. Install dependencies
-pip install -r requirements.txt
+3.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-# 3. (Optional) Copy environment template
-copy .env.example .env
+4.  **Environment Variables**:
+    Create a `.env` file in the root directory:
+    ```env
+    SECRET_KEY=your_super_secret_key_here
+    DATABASE_URL=sqlite:///./movies.db
+    ```
 
-# 4. Run the app
-uvicorn app.main:app --reload
-```
+5.  **Run the application**:
+    ```bash
+    python -m uvicorn app.main:app --reload
+    ```
+    Visit `http://127.0.0.1:8000` to start your wishlist!
 
-Open **http://localhost:8000** — a `movies.db` SQLite file will be created automatically.
+## 🔐 Data Security & Isolation
+In v1.3, we've implemented major security improvements to guarantee user data isolation:
+- **ID Reuse Protection**: By using `AUTOINCREMENT`, we ensure that new users never inherit IDs (and thus old data) from deleted accounts.
+- **Ownership Enforcement**: Every movie operation (Add, View, Delete) now strictly verifies the owner's `user_id` against the authenticated session.
+- **Cascading Purge**: SQLite foreign keys are now strictly enforced via `PRAGMA foreign_keys = ON`, ensuring zero orphaned records.
+
+## 📄 License
+This project is open-source and available under the [MIT License](LICENSE).
 
 ## API Endpoints
 
 | Method   | URL                      | Description                      |
 | -------- | ------------------------ | -------------------------------- |
-| `GET`    | `/version`               | API version check (v1.0)         |
+| `GET`    | `/version`               | API version check (v1.1)         |
 | `GET`    | `/`                      | Main page (HTML)                 |
+| `GET`    | `/login`                 | User Login Page                  |
+| `GET`    | `/signup`                | User Registration Page           |
+| `GET`    | `/logout`                | Invalidate Session Cookie        |
 | `POST`   | `/add-movie`             | Add movie via form (HTMX)        |
 | `GET`    | `/movies`                | Movie list partial (HTMX)        |
 | `DELETE` | `/delete-movie/{id}`     | Delete movie from UI (HTMX)      |
@@ -59,24 +84,33 @@ Interactive docs: **http://localhost:8000/docs**
 ```
 repo-root/
 ├── app/
-│   ├── __init__.py            # Python package marker
-│   ├── main.py                # FastAPI entry point (v1.0)
-│   ├── database.py            # SQLAlchemy engine & session setup
-│   ├── routes/
-│   │   └── movies.py          # All API routes (HTML + JSON)
-│   ├── services/
-│   │   └── movie_service.py   # DB-backed CRUD functions
+│   ├── __init__.py              # Python package marker
+│   ├── main.py                  # FastAPI entry point (v1.1)
+│   ├── database.py              # SQLAlchemy engine & session setup
 │   ├── models/
-│   │   ├── movie.py           # Pydantic schemas
-│   │   └── db_movie.py        # SQLAlchemy ORM model
+│   │   ├── db_movie.py          # Movie ORM model
+│   │   ├── movie.py             # Pydantic schemas for movies
+│   │   └── user.py              # User ORM model & Pydantic schemas
+│   ├── services/
+│   │   ├── movie_service.py     # CRUD functions for movies & ratings
+│   │   └── user_service.py      # CRUD functions for users & authentication
+│   ├── routes/
+│   │   ├── movies.py            # Movie-related routes (HTML + JSON)
+│   │   └── auth.py              # Sign-up, Sign-in, Logout routes
 │   └── templates/
-│       └── index.html         # HTMX-powered frontend
+│       ├── index.html            # Home page (movie listing)
+│       ├── login.html            # Sign-in page
+│       ├── signup.html           # Sign-up page
+│       └── movie_list.html       # Movie table partial (HTMX)
 ├── static/
-│   └── styles.css             # Premium dark-mode styling
-├── requirements.txt
-├── render.yaml                # Render deployment blueprint
-├── .env.example               # Environment variable template
-└── README.md
+│   ├── styles.css                # Global styling / dark mode
+│   └── scripts.js                # Optional JS for stars / interactive ratings
+├── .env                          # Environment variables (not committed)
+├── .gitignore                    # Ignore .venv, __pycache__, .db, etc.
+├── requirements.txt              # Python dependencies
+├── render.yaml                   # Render deployment blueprint
+├── README.md                     # Project info + instructions
+└── movies.db                     # SQLite database (for dev only)
 ```
 
 ## Deploy to Render

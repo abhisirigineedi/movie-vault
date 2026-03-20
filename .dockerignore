@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+movies.db
+data/
+*.db
+.vscode/
+.git/

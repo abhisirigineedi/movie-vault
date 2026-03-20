@@ -1,31 +1,31 @@
 {% for movie in movies %}
-{% set is_rated_by_user = user and user.ratings | selectattr("movie_id", "equalto", movie.id) | list %}
-<li class="movie-card{% if is_rated_by_user %} rated-by-user{% endif %}">
+{% set is_rated = false %}
+{% if user %}
+    {% for rating in user.ratings %}
+        {% if rating.movie_id == movie.id %}
+            {% set is_rated = true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<li class="movie-card {% if is_rated %}rated-by-user{% endif %}" style="{% if is_rated %}background: linear-gradient(90deg, rgba(124, 92, 252, 0.1) 0%, transparent 100%); border-left: 4px solid var(--accent);{% endif %}">
     <div class="movie-info">
         <span class="movie-title-text">
             <span class="movie-number">{{ loop.index }}.</span> 🎬 {{ movie.title }}
         </span>
-        <span class="movie-meta">
-            📌 Genre: 
+        <span class="movie-meta">📌 Genre: 
             {% if movie.genre %}
-            <span class="genre-tag">{{ movie.genre }}</span>
-            {% else %}
-            Not specified
-            {% endif %}
+            <span class="genre-tag" style="background: rgba(124, 92, 252, 0.2); color: #a29bfe; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">{{ movie.genre }}</span>
+            {% else %}Not specified{% endif %}
         </span>
-        <span class="movie-meta">
-            ⭐ Rating: 
+        <span class="movie-meta">⭐ Rating: 
             {% if movie.rating %}
-                {% set full_stars = movie.rating | int %}
-                {% for i in range(full_stars) %}⭐{% endfor %}
-                ({{ movie.rating }})
-            {% else %}
-                Not specified
-            {% endif %}
+            <span class="star-rating" style="--rating: {{ movie.rating }};" title="{{ movie.rating }} out of 5">★★★★★</span> ({{ movie.rating }})
+            {% else %}Not specified{% endif %}
         </span>
     </div>
     {% if user %}
-    <button class="delete-btn" hx-delete="/delete-movie/{{ movie.id }}" hx-target="closest li" hx-swap="outerHTML" aria-label="Delete movie">✕</button>
+    <button class="delete-btn" hx-delete="/delete-movie/{{ movie.id }}" hx-target="closest li" hx-swap="outerHTML"
+        aria-label="Delete movie">✕</button>
     {% endif %}
 </li>
 {% endfor %}

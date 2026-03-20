@@ -89,6 +89,7 @@ body {
     0% {
         transform: translate(0, 0) scale(1);
     }
+
     100% {
         transform: translate(40px, -30px) scale(1.12);
     }
@@ -135,7 +136,8 @@ form {
     gap: 10px;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"],
+input[type="number"] {
     flex: 1;
     padding: 14px 18px;
     font-size: 0.95rem;
@@ -148,11 +150,13 @@ input[type="text"], input[type="number"] {
     transition: border var(--transition), box-shadow var(--transition);
 }
 
-input[type="text"]::placeholder, input[type="number"]::placeholder {
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
     color: var(--text-secondary);
 }
 
-input[type="text"]:focus, input[type="number"]:focus {
+input[type="text"]:focus,
+input[type="number"]:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
@@ -235,12 +239,14 @@ button[type="submit"]:active {
 .delete-btn {
     background: transparent;
     border: none;
-    color: #ff4d4d; /* Always red */
+    color: #ff4d4d;
+    /* Always red */
     font-size: 1.1rem;
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 6px;
-    margin-left: auto; /* Guarantees pushing to the very end */
+    margin-left: auto;
+    /* Guarantees pushing to the very end */
     transition: color var(--transition), background var(--transition);
 }
 
@@ -265,6 +271,7 @@ button[type="submit"]:active {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -290,96 +297,14 @@ button[type="submit"]:active {
     }
 }
 
-/* ---------- Badges and Tags ---------- */
-.genre-tag {
-    background: rgba(124, 92, 252, 0.2);
-    color: var(--accent);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-left: 4px;
-}
-
-.rated-by-user {
-    border-left: 4px solid var(--accent) !important;
-    background: linear-gradient(90deg, rgba(124, 92, 252, 0.1) 0%, transparent 100%) !important;
-}
-
-/* ---------- Auth Form Styles ---------- */
-.form-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius);
-    padding: 30px;
-    margin: 40px auto;
-    max-width: 400px;
-}
-.form-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-.form-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-}
-.form-group label {
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-}
-.btn-primary {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    text-decoration: none;
+.star-rating {
     display: inline-block;
-}
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-}
-.w-100 {
-    width: 100%;
-}
-.alert {
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-.alert-error {
-    background: rgba(255, 77, 77, 0.2);
-    color: #ff4d4d;
-    border: 1px solid rgba(255, 77, 77, 0.4);
-}
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-}
-.nav-links a {
-    color: var(--text-primary);
-    text-decoration: none;
-    margin-left: 15px;
+    font-size: 1.1rem;
+    color: var(--bg-card);
+    position: relative;
+    background: linear-gradient(90deg, #f1c40f calc(var(--rating) / 5 * 100%), rgba(255,255,255,0.2) calc(var(--rating) / 5 * 100%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
 }
