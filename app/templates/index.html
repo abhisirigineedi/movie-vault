@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Movie Wishlist — keep track of the movies you want to watch." />
+    <title>🎬 Movie Wishlist</title>
+
+    <!-- HTMX CDN -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <!-- Custom styles (cache-busted) -->
+    <link rel="stylesheet" href="/static/styles.css?v=3" />
+
+    <!-- Google Font — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+    <style>
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .input-group input {
+            flex: 1;
+            min-width: 120px;
+        }
+        .movie-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .movie-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .movie-title-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .movie-meta {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated floating background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🎬 Movie Wishlist</h1>
+            <p class="subtitle">Keep track of the movies you want to watch</p>
+        </header>
+
+        <!-- Add-movie form (HTMX powered) -->
+        <form
+            id="add-movie-form"
+            hx-post="/add-movie"
+            hx-target="#movie-list"
+            hx-swap="innerHTML"
+            hx-on::after-request="this.reset()"
+        >
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="movie-title"
+                    name="title"
+                    placeholder="Movie name…"
+                    required
+                    autocomplete="off"
+                />
+                <input
+                    type="text"
+                    id="movie-genre"
+                    name="genre"
+                    placeholder="Genre (e.g. Sci-Fi)"
+                    autocomplete="off"
+                />
+                <input
+                    type="number"
+                    id="movie-rating"
+                    name="rating"
+                    placeholder="Rating (1-5)"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                />
+                <input
+                    type="number"
+                    id="movie-year"
+                    name="year"
+                    placeholder="Year (e.g. 2024)"
+                    min="1888"
+                    max="2100"
+                    step="1"
+                />
+                <button type="submit" id="add-movie-btn">
+                    <span class="btn-icon">＋</span> Add
+                </button>
+            </div>
+        </form>
+
+        <!-- Movie list section -->
+        <section class="movie-list-section">
+            <h2>Your Movies</h2>
+            <ul id="movie-list">
+                {% include 'movie_list.html' %}
+            </ul>
+
+            {% if not movies %}
+            <p class="empty-state" id="empty-state">
+                No movies yet — add one above! 🍿
+            </p>
+            {% endif %}
+        </section>
+    </div>
+
+    <!-- Hide the empty-state text once a movie is added -->
+    <script>
+        document.body.addEventListener("htmx:afterSwap", function (evt) {
+            const list = document.getElementById("movie-list");
+            const empty = document.getElementById("empty-state");
+            if (empty && list && list.children.length > 0) {
+                empty.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
